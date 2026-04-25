@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { House, Search, User, ShoppingCart } from 'lucide-react'
+import { House, Search, User, ShoppingCart, MessageCircle } from 'lucide-react'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useCart } from '../hooks/useCart'
 import type { Product } from '../types/product'
 
 export default function Navbar() {
@@ -9,6 +10,8 @@ export default function Navbar() {
   const [results, setResults] = useState<Product[]>([])
   const [showResults, setShowResults] = useState(false)
   const navigate = useNavigate()
+  const { items } = useCart()
+  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -94,11 +97,19 @@ export default function Navbar() {
 
         {/* User & Cart Icons */}
         <div className="flex items-center gap-1 shrink-0">
+          <Link to="/chat" className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <MessageCircle size={20} className="text-gray-600" />
+          </Link>
           <Link to="/minha-conta" className="p-2 rounded-full hover:bg-gray-100 transition-colors">
             <User size={20} className="text-gray-600" />
           </Link>
           <Link to="/carrinho" className="p-2 rounded-full hover:bg-gray-100 transition-colors relative">
             <ShoppingCart size={20} className="text-gray-600" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
           </Link>
         </div>
       </div>

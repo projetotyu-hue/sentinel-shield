@@ -6,6 +6,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton'
 import ErrorMessage from '../components/ErrorMessage'
 import { ArrowLeft, ShoppingCart } from 'lucide-react'
 import type { Product } from '../types/product'
+import YouTubeEmbed from '../components/YouTubeEmbed'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -96,6 +97,13 @@ export default function ProductDetail() {
 
           {product.free_shipping && (
             <p className="text-sm text-green-600 mb-4">🚚 Frete grátis</p>
+          )}
+
+          {/* YouTube Video */}
+          {product.video_id && (
+            <div className="mb-4">
+              <YouTubeEmbed videoId={product.video_id} title={product.name} />
+            </div>
           )}
 
           {/* Quantity Selector */}

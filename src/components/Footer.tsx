@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { ShieldCheck, Lock, Award, Mail, Phone, Clock } from 'lucide-react'
 
 export default function Footer() {
@@ -5,7 +6,7 @@ export default function Footer() {
     <footer className="border-t border-gray-100 mt-8">
       <div className="px-4 py-6 flex flex-col items-center gap-4">
         {/* Store Name */}
-        <span className="text-base font-bold text-rose-600 tracking-tight">Achadinhos do Momento 123</span>
+        <span className="text-base font-bold text-rose-600 tracking-tight">Sentinel Shield Store</span>
 
         {/* Trust Icons */}
         <div className="flex items-center justify-center gap-6 text-gray-400">
@@ -25,14 +26,12 @@ export default function Footer() {
 
         {/* Contact Info */}
         <div className="text-center text-xs text-gray-400 flex flex-col gap-0.5">
-          <p className="font-medium text-gray-600">Achadinhos do Momento 123</p>
-          <p>CNPJ: 55.012.266/0001-46</p>
-          <p>AV CELSO GARCIA 3220, São Paulo-SP</p>
-          <a href="mailto:achadinhoscontato@gmail.com" className="flex items-center justify-center gap-1 hover:text-gray-600">
-            <Mail size={10} /> achadinhoscontato@gmail.com
+          <p className="font-medium text-gray-600">Sentinel Shield Store</p>
+          <a href="mailto:contato@sentinelshield.com" className="flex items-center justify-center gap-1 hover:text-gray-600">
+            <Mail size={10} /> contato@sentinelshield.com
           </a>
-          <a href="https://wa.me/5511996586625" className="flex items-center justify-center gap-1 hover:text-gray-600">
-            <Phone size={10} /> (11) 99658-6625
+          <a href="https://wa.me/5511999999999" className="flex items-center justify-center gap-1 hover:text-gray-600">
+            <Phone size={10} /> (11) 99999-9999
           </a>
           <p className="flex items-center justify-center gap-1">
             <Clock size={10} /> Seg-Sex: 09h-18h | Sáb: 09h-13h
@@ -50,10 +49,10 @@ export default function Footer() {
 
         {/* Footer Links */}
         <div className="flex items-center gap-4 text-xs text-gray-400">
-          <a href="/termos.html" className="hover:text-gray-600 transition-colors">Termos de Uso</a>
-          <a href="/privacidade.html" className="hover:text-gray-600 transition-colors">Privacidade</a>
-          <a href="/trocas-e-devolucoes.html" className="hover:text-gray-600 transition-colors">Trocas e Devoluções</a>
-          <a href="/contato.html" className="hover:text-gray-600 transition-colors">Contato</a>
+          <Link to="/termos" className="hover:text-gray-600 transition-colors">Termos de Uso</Link>
+          <Link to="/privacidade" className="hover:text-gray-600 transition-colors">Privacidade</Link>
+          <Link to="/trocas" className="hover:text-gray-600 transition-colors">Trocas e Devoluções</Link>
+          <Link to="/contato" className="hover:text-gray-600 transition-colors">Contato</Link>
         </div>
       </div>
     </footer>

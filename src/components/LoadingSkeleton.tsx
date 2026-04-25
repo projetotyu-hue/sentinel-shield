@@ -1,6 +1,6 @@
 export default function LoadingSkeleton({ count = 8 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 gap-6">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="bg-white rounded-xl shadow-sm border p-4 animate-pulse">
           <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
