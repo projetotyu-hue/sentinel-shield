@@ -11,10 +11,11 @@ export default function Home() {
 
   const categories = [
     { id: 'todos', name: 'Todos' },
-    { id: 'eletronicos', name: 'Eletrônicos' },
-    { id: 'casa', name: 'Casa' },
-    { id: 'moda', name: 'Moda' },
-    { id: 'esportes', name: 'Esportes' },
+    { id: 'Eletrodomésticos', name: 'Eletrodomésticos' },
+    { id: 'Eletrônicos', name: 'Eletrônicos' },
+    { id: 'Casa', name: 'Casa' },
+    { id: 'Moda', name: 'Moda' },
+    { id: 'Esportes', name: 'Esportes' },
   ]
 
   useEffect(() => {
@@ -23,13 +24,16 @@ export default function Home() {
 
   async function fetchProducts() {
     setLoading(true)
-    let query = supabase.from('products').select('*')
+    let query = supabase
+      .from('products')
+      .select('*')
+      .order('position', { ascending: true })
 
     if (activeCategory !== 'todos') {
       query = query.eq('category', activeCategory)
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false })
+    const { data, error } = await query
 
     if (error) {
       console.error('Erro ao buscar produtos:', error)

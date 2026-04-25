@@ -6,10 +6,6 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
-  const discount = product.original_price
-    ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
-    : product.discount || 0
-
   return (
     <Link to={`/produto/${product.id}`} className="card group">
       <div className="relative overflow-hidden">
@@ -18,9 +14,19 @@ export default function ProductCard({ product }: Props) {
           alt={product.name}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {discount > 0 && (
+        {product.discount_percent > 0 && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            -{discount}%
+            -{product.discount_percent}%
+          </div>
+        )}
+        {product.badge && (
+          <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">
+            {product.badge}
+          </div>
+        )}
+        {product.free_shipping && (
+          <div className="absolute bottom-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+            FRETE GRÁTIS
           </div>
         )}
       </div>
@@ -33,7 +39,7 @@ export default function ProductCard({ product }: Props) {
           <span className="text-xl font-bold text-orange-500">
             R$ {product.price.toFixed(2)}
           </span>
-          {product.original_price && (
+          {product.original_price > product.price && (
             <span className="text-sm text-gray-400 line-through">
               R$ {product.original_price.toFixed(2)}
             </span>
@@ -41,15 +47,15 @@ export default function ProductCard({ product }: Props) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className={`text-xs ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {product.stock > 0 ? `${product.stock} em estoque` : 'Esgotado'}
+          <span className="text-xs text-gray-500">
+            {product.sales_count} vendas
           </span>
           <button
             onClick={(e) => {
               e.preventDefault()
-              // TODO: Add to cart
+              alert('Adicionado ao carrinho!')
             }}
-            className="btn-primary text-sm py-1 px-3"
+            className="bg-orange-500 hover:bg-orange-600 text-white text-sm py-1 px-3 rounded transition-colors"
           >
             Comprar
           </button>
