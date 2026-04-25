@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useLocation } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import LoadingSkeleton from '../components/LoadingSkeleton'
@@ -13,6 +13,7 @@ export default function Products() {
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [categories, setCategories] = useState<string[]>([])
+  const location = useLocation()
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -37,7 +38,14 @@ export default function Products() {
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+
+    // Check if there's a search query in the URL
+    const params = new URLSearchParams(location.search)
+    const searchParam = params.get('search')
+    if (searchParam) {
+      setSearch(searchParam)
+    }
+  }, [location.search])
 
   useEffect(() => {
     let filtered = products
@@ -58,22 +66,22 @@ export default function Products() {
   }, [products, search, selectedCategory])
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Todos os Produtos</h1>
+    <div className="px-4 py-6">
+      <h1 className="text-xl font-bold mb-6">Todos os Produtos</h1>
 
-      {/* Busca e Filtro */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+      {/* Search and Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <input
           type="text"
-          placeholder="Buscar produtos..."
+          placeholder="Pesquisar produtos..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="flex-grow border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm"
         />
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm"
         >
           <option value="">Todas as categorias</option>
           {categories.map(cat => (
@@ -89,25 +97,33 @@ export default function Products() {
       {loading ? (
         <LoadingSkeleton count={8} />
       ) : filteredProducts.length === 0 ? (
-        <p className="text-center text-gray-500 py-12">
+        <p className="text-center text-gray-400 py-12">
           {search || selectedCategory ? 'Nenhum produto encontrado.' : 'Nenhum produto disponível.'}
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-3">
           {filteredProducts.map(product => (
-            <Link to={`/produto/${product.id}`} key={product.id} className="group">
-              <div className="bg-white rounded-xl shadow-sm border hover:shadow-md transition p-4">
-                <img
-                  src={product.image_url || 'https://via.placeholder.com/300'}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
-                />
-                <h3 className="font-semibold text-gray-800 group-hover:text-purple-600 line-clamp-2">
-                  {product.name}
-                </h3>
-                <p className="text-2xl font-bold text-purple-600 mt-2">
-                  R$ {product.price.toFixed(2)}
-                </p>
+            <Link to={`/produto/${product.id}`} key={product.id} className="block">
+              <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
+                <div className="aspect-square bg-gray-50 relative">
+                  <img
+                    src={product.image_url || 'https://via.placeholder.com/300'}
+                    alt={product.name}
+                    className="object-cover w-full h-full"
+                  />
+                  {product.discount_percent && (
+                    <span className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md z-10">
+                      {product.discount_percent}% OFF
+                    </span>
+                  )}
+                </div>
+                <div className="p-2.5">
+                  <p className="text-xs text-gray-600 line-clamp-2 mb-1 leading-tight">{product.name}</p>
+                  <p className="text-sm font-bold text-rose-600">R$ {product.price.toFixed(2)}</p>
+                  {product.original_price && (
+                    <p className="text-[10px] text-gray-400 line-through">R$ {product.original_price.toFixed(2)}</p>
+                  )}
+                </div>
               </div>
             </Link>
           ))}

@@ -1,28 +1,107 @@
-import { Link } from 'react-router-dom'
-import { useCart } from '../hooks/useCart'
+import { Link, useNavigate } from 'react-router-dom'
+import { House, Search, User, ShoppingCart } from 'lucide-react'
+import { useState } from 'react'
+import { supabase } from '../lib/supabase'
+import type { Product } from '../types/product'
 
 export default function Navbar() {
-  const { items } = useCart()
-  const count = items.reduce((s, i) => s + i.quantity, 0)
+  const [search, setSearch] = useState('')
+  const [results, setResults] = useState<Product[]>([])
+  const [showResults, setShowResults] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearch(value)
+
+    if (value.length > 2) {
+      const { data } = await supabase
+        .from('products')
+        .select('*')
+        .or(`name.ilike.%${value}%,description.ilike.%${value}%`)
+        .limit(5)
+
+      setResults(data || [])
+      setShowResults(true)
+    } else {
+      setResults([])
+      setShowResults(false)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (search.trim()) {
+      setShowResults(false)
+      navigate(`/produtos?search=${encodeURIComponent(search.trim())}`)
+    }
+  }
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-purple-600">Faber Shop</Link>
-        <div className="flex items-center gap-6">
-          <Link to="/produtos" className="text-gray-600 hover:text-purple-600">Produtos</Link>
-          <Link to="/carrinho" className="relative">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 3.7a1 1 0 001.1 1.5h9.2a1 1 0 00.9-1.5L13 13H7z" />
-            </svg>
-            {count > 0 && (
-              <span className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {count}
-              </span>
-            )}
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 w-full">
+      <div className="px-4 py-3 flex items-center gap-3">
+        {/* Logo */}
+        <Link to="/" className="shrink-0">
+          <span className="text-lg font-bold text-rose-600 tracking-tight flex items-center gap-1">
+            <House size={20} />
+          </span>
+        </Link>
+
+        {/* Search Form */}
+        <form onSubmit={handleSubmit} className="flex-1 relative">
+          <div className="flex items-center bg-gray-100 rounded-full px-3 py-2 gap-2">
+            <Search size={16} className="text-gray-400 shrink-0" />
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              value={search}
+              onChange={handleSearch}
+              onBlur={() => setTimeout(() => setShowResults(false), 200)}
+              onFocus={() => results.length > 0 && setShowResults(true)}
+              className="flex-1 bg-transparent text-sm outline-none text-gray-700 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Search Results Dropdown */}
+          {showResults && results.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto">
+              {results.map(product => (
+                <Link
+                  key={product.id}
+                  to={`/produto/${product.id}`}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                  onClick={() => {
+                    setShowResults(false)
+                    setSearch('')
+                  }}
+                >
+                  <img
+                    src={product.image_url || 'https://via.placeholder.com/40'}
+                    alt={product.name}
+                    className="w-10 h-10 object-cover rounded-lg"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-800 truncate">{product.name}</p>
+                    <p className="text-sm font-bold text-rose-600">
+                      R$ {product.price.toFixed(2)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </form>
+
+        {/* User & Cart Icons */}
+        <div className="flex items-center gap-1 shrink-0">
+          <Link to="/minha-conta" className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <User size={20} className="text-gray-600" />
+          </Link>
+          <Link to="/carrinho" className="p-2 rounded-full hover:bg-gray-100 transition-colors relative">
+            <ShoppingCart size={20} className="text-gray-600" />
           </Link>
         </div>
       </div>
-    </nav>
+    </header>
   )
 }
