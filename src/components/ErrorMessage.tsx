@@ -5,7 +5,7 @@ export default function ErrorMessage({ message, onRetry }: { message: string; on
       {onRetry && (
         <button
           onClick={onRetry}
-          className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+          className="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-700"
         >
           Tentar Novamente
         </button>

@@ -3,7 +3,14 @@ import { createContext, useContext, useReducer, useEffect } from 'react'
 const CartContext = createContext()
 
 const initialState = {
-  items: JSON.parse(localStorage.getItem('cart') || '[]'),
+  items: (() => {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]')
+    } catch {
+      localStorage.removeItem('cart')
+      return []
+    }
+  })(),
   total: 0
 }
 

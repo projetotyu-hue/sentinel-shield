@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabase'
 import LoadingSkeleton from '../components/LoadingSkeleton'
 import ErrorMessage from '../components/ErrorMessage'
@@ -11,6 +12,20 @@ export default function Home() {
   const [recommended, setRecommended] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const slides = [
+    { id: 1, image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=300&fit=crop', title: 'Ofertas Imperdíveis', subtitle: 'Até 70% OFF em produtos selecionados' },
+    { id: 2, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=300&fit=crop', title: 'Tecnologia Premium', subtitle: 'Os melhores gadgets com frete grátis' },
+    { id: 3, image: 'https://images.unsplash.com/photo-1498049794561-5f57a5a2e9b7?w=800&h=300&fit=crop', title: 'Frete Grátis', subtitle: 'Para compras acima de R$ 99,00' }
+  ]
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [slides.length])
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -38,8 +53,15 @@ export default function Home() {
   }, [])
 
   const renderProductCard3 = (product: Product) => (
-    <Link to={`/produto/${product.id}`} key={product.id} className="block">
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
+    <motion.div
+      key={product.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -4 }}
+    >
+      <Link to={`/produto/${product.id}`} className="block">
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
         <div className="relative aspect-square bg-gray-50">
           <img
             src={product.image_url || 'https://via.placeholder.com/300'}
@@ -69,11 +91,19 @@ export default function Home() {
         </div>
       </div>
     </Link>
+    </motion.div>
   )
 
   const renderProductCard2 = (product: Product) => (
-    <Link to={`/produto/${product.id}`} key={product.id} className="block">
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
+    <motion.div
+      key={product.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -4 }}
+    >
+      <Link to={`/produto/${product.id}`} className="block">
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
         <div className="aspect-square bg-gray-50 relative">
           <img
             src={product.image_url || 'https://via.placeholder.com/300'}
@@ -95,6 +125,7 @@ export default function Home() {
         </div>
       </div>
     </Link>
+    </motion.div>
   )
 
   return (
@@ -106,7 +137,7 @@ export default function Home() {
             <img src="https://via.placeholder.com/48" className="w-full h-full object-cover" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-800">Achadinhos do Momento 123</p>
+            <p className="text-sm font-semibold text-gray-800">Sentinel Shield Store</p>
             <p className="text-xs text-gray-400">140.327 vendido(s)</p>
           </div>
         </div>
@@ -114,9 +145,67 @@ export default function Home() {
           <button className="px-4 py-1.5 rounded-lg text-sm font-medium bg-rose-600 text-white hover:bg-rose-700 transition-colors">
             Seguir
           </button>
-          <a href="/chat.html" className="px-4 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors text-center flex items-center justify-center gap-1">
+          <Link to="/chat" className="px-4 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors text-center flex items-center justify-center gap-1">
             <MessageSquare size={14} /> Mensagem
-          </a>
+          </Link>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div className="px-4 py-6">
+        <h2 className="text-lg font-bold mb-4">Categorias</h2>
+        <div className="grid grid-cols-4 gap-3">
+          {[
+            { name: 'Eletrodomésticos', icon: '🏠', slug: 'eletrodomesticos' },
+            { name: 'Caixas de Som', icon: '🔊', slug: 'caixas-de-som' },
+            { name: 'Fones de Ouvido', icon: '🎧', slug: 'fones-de-ouvido' },
+            { name: 'Smartphones', icon: '📱', slug: 'smartphones' },
+            { name: 'Smartwatches', icon: '⌚', slug: 'smartwatches' },
+            { name: 'Notebooks', icon: '💻', slug: 'notebooks' },
+            { name: 'Tablets', icon: '📱', slug: 'tablets' },
+            { name: 'Consoles', icon: '🎮', slug: 'consoles' }
+          ].map(cat => (
+            <Link
+              key={cat.slug}
+              to={`/produtos?categoria=${cat.slug}`}
+              className="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-gray-100 hover:border-rose-200 hover:shadow-sm transition-all"
+            >
+              <span className="text-2xl">{cat.icon}</span>
+              <span className="text-[10px] text-gray-600 text-center leading-tight">{cat.name}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Slider / Banner */}
+      <div className="relative px-4 py-3">
+        <div className="relative h-36 rounded-xl overflow-hidden">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-700 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white">
+                <h2 className="text-lg font-bold">{slide.title}</h2>
+                <p className="text-sm mt-1">{slide.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Dots */}
+        <div className="flex justify-center gap-1 mt-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === currentSlide ? 'bg-rose-600' : 'bg-gray-300'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
@@ -176,6 +265,31 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-3">
               {recommended.map(renderProductCard2)}
             </div>
+          </div>
+
+          {/* Testimonials */}
+          <div className="px-4 py-6 bg-gray-50">
+            <h2 className="text-lg font-bold mb-4 text-center">O que dizem sobre nós</h2>
+            <div className="grid grid-cols-1 gap-3">
+              {[
+                { name: 'Ana Silva', text: 'Comprei um fone de ouvido e chegou super rápido! Qualidade excelente, recomendo muito.', rating: 5 },
+                { name: 'Carlos Mendes', text: 'Atendimento nota 10. Tive um problema com o frete e resolveram na hora pelo chat.', rating: 5 },
+                { name: 'Juliana Costa', text: 'Os produtos são exatamente como nas fotos. Já comprei 3 vezes e nunca tive problemas.', rating: 4 }
+              ].map((testimonial, i) => (
+                <div key={i} className="bg-white p-4 rounded-xl border border-gray-100">
+                  <div className="flex items-center gap-1 mb-2">
+                    {Array(testimonial.rating).fill('★').join('')}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">"{testimonial.text}"</p>
+                  <p className="text-xs text-gray-400 font-medium">{testimonial.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div className="mt-6">
+            <Newsletter />
           </div>
         </div>
       )}
