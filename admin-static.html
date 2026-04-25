@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faber Shop - Achadinhos Incríveis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+    body { font-family: 'Geist', sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .nav-link.active { background: #ffe1e6; color: #e11d48; }
+    .modal { display: none; }
+    .modal.active { display: flex; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 flex">
+  <!-- Sidebar -->
+  <aside class="hidden lg:flex flex-col w-56 min-h-screen bg-white border-r border-gray-100 sticky top-0 h-screen overflow-y-auto">
+    <div class="px-6 py-5 border-b border-gray-100">
+      <span class="text-lg font-bold tracking-tight text-gray-900">Achadinhos</span>
+      <span class="block text-xs text-gray-400 mt-0.5">Painel Admin</span>
+    </div>
+    <nav class="flex-1 px-3 py-4 flex flex-col gap-0.5">
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors cursor-pointer active" data-page="dashboard">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="layout-dashboard"></i>Dashboard</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="categorias">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="tag"></i>Categorias</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="produtos">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="package"></i>Produtos</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="protecao">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="shield"></i>Proteção Prod.</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="relacionados">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="sparkles"></i>Relacionados</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="clientes">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="users"></i>Clientes</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="pedidos">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="shopping-bag"></i>Pedidos</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="perfil">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="user"></i>Perfil</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="frete">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="truck"></i>Frete</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="tiktok">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="at-sign"></i>TikTok</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="whosamungus">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="eye"></i>Whos.AmungUs</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="chave">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="key"></i>Chave StreetPay</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="upsells">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="trending-up"></i>Upsells</span></a>
+      <a href="#" class="nav-link relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-gray-600 hover:bg-gray-50" data-page="configuracoes">
+        <span class="relative z-10 flex items-center gap-3"><i data-lucide="settings"></i>Configurações</span></a>
+    </nav>
+    <div class="px-3 py-4 border-t border-gray-100">
+      <button onclick="window.location.reload()" class="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors">
+        <i data-lucide="log-out"></i>Sair</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <h1 class="page-title text-base font-semibold text-gray-800">Dashboard</h1>
+      <div class="w-8 h-8 rounded-full bg-rose-100 overflow-hidden flex items-center justify-center">
+        <i data-lucide="user" class="w-4 h-4 text-rose-600"></i>
+      </div>
+    </header>
+
+    <main class="flex-1 p-6 overflow-auto">
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="page active">
+        <div class="flex flex-col gap-6">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-blue-400">
+              <div class="flex items-center gap-2 mb-3"><i data-lucide="shopping-cart" class="w-4 h-4 text-blue-400"></i>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Checkout (pedidos pagos)</p>
+              </div>
+              <p class="text-2xl font-bold text-gray-800 mb-1 dashboard-checkout">R$ 270.354,00</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-purple-400">
+              <div class="flex items-center gap-2 mb-3"><i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Upsell (PIX) pago</p>
+              </div>
+              <p class="text-2xl font-bold text-gray-800 mb-1 dashboard-upsell">R$ 17.920,00</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-green-400">
+              <div class="flex items-center gap-2 mb-3"><span class="text-base">💰</span>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Total recebido</p>
+              </div>
+              <p class="text-2xl font-bold text-green-600 mb-1 dashboard-total">R$ 288.274,00</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-orange-400">
+              <div class="flex items-center gap-2 mb-3"><span class="text-base">✓</span>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Taxa aprovação</p>
+              </div>
+              <p class="text-2xl font-bold text-gray-800 mb-1 dashboard-taxa">21,3%</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-purple-300">
+              <p class="text-3xl font-bold text-purple-600 mb-1 dashboard-produtos">34</p>
+              <p class="text-xs text-gray-400">Produtos ativos</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-purple-300">
+              <p class="text-3xl font-bold text-purple-600 mb-1 dashboard-avaliacoes">25</p>
+              <p class="text-xs text-gray-400">Avaliações</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5 border-t-4 border-t-purple-300">
+              <p class="text-3xl font-bold text-purple-600 mb-1 dashboard-vendidos">140.327</p>
+              <p class="text-xs text-gray-400">Vendidos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIAS -->
+      <div id="page-categorias" class="page">
+        <div class="bg-white rounded-xl border border-gray-100">
+          <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
+            <p class="text-sm font-semibold text-gray-800"><span id="count-categorias">16</span> categorias</p>
+            <button onclick="openModal('modal-categoria')" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+              <i data-lucide="plus" class="w-4 h-4"></i>Nova categoria</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr><th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">ID</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Nome</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Produtos</th></tr>
+              </thead>
+              <tbody id="tabela-categorias"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUTOS -->
+      <div id="page-produtos" class="page">
+        <div class="bg-white rounded-xl border border-gray-100">
+          <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center gap-4 flex-wrap">
+            <p class="text-sm font-semibold text-gray-800"><span id="count-produtos">38</span> produtos</p>
+            <div class="flex gap-2">
+              <input type="text" id="busca-produtos" placeholder="Buscar..." class="border border-gray-200 rounded-lg px-3 py-2 text-sm w-48" onkeyup="renderProdutos()">
+              <button onclick="openModal('modal-produto')" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>Novo produto</button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr><th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">ID</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">NOME</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">PREÇO</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">PREÇO ANTIGO</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">ESTOQUE</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">TOP</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">STATUS</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">VENDAS</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">AÇÕES</th></tr>
+              </thead>
+              <tbody id="tabela-produtos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEDIDOS -->
+      <div id="page-pedidos" class="page">
+        <div class="bg-white rounded-xl border border-gray-100">
+          <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center gap-4 flex-wrap">
+            <p class="text-sm font-semibold text-gray-800"><span id="count-pedidos">136</span> pedidos</p>
+            <select id="filtro-status" class="border border-gray-200 rounded-lg px-3 py-2 text-sm" onchange="renderPedidos()">
+              <option value="">Todos</option>
+              <option value="Aguardando Pix">Aguardando Pix</option>
+              <option value="Pago">Pago</option>
+              <option value="Enviado">Enviado</option>
+              <option value="Entregue">Entregue</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr><th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">ID / CLIENTE</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">PRODUTOS</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">FRETE</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">DESCONTO</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">TOTAL</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">DATA</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">PAGAMENTO</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">AÇÕES</th></tr>
+              </thead>
+              <tbody id="tabela-pedidos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div id="page-clientes" class="page">
+        <div class="bg-white rounded-xl border border-gray-100">
+          <div class="px-6 py-4 border-b border-gray-50"><p class="text-sm font-semibold text-gray-800"><span id="count-clientes">67</span> clientes</p></div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 border-b border-gray-100">
+                <tr><th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">E</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Nome</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Email</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Telefone</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Pedidos</th>
+                  <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide px-6 py-3">Último</th></tr>
+              </thead>
+              <tbody id="tabela-clientes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERFIL -->
+      <div id="page-perfil" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Meu perfil</p>
+          <form id="form-perfil" class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">Email</label>
+              <input type="email" name="email" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div class="border-t border-gray-100 pt-4"><p class="text-xs font-medium text-gray-600 mb-3">Alterar senha</p>
+              <div><label class="block text-sm text-gray-600 mb-1">Senha atual</label>
+                <input type="password" name="senhaAtual" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              <div><label class="block text-sm text-gray-600 mb-1">Nova senha</label>
+                <input type="password" name="novaSenha" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            </div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- FRETE -->
+      <div id="page-frete" class="page">
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4">
+            <div class="flex-1"><p class="text-sm font-medium text-gray-800">Frete Grátis</p><p class="text-xs text-gray-400">Grátis · 12 dias</p></div>
+            <button class="w-9 h-5 rounded-full bg-rose-600 relative"><span class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow translate-x-4"></span></button>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4">
+            <div class="flex-1"><p class="text-sm font-medium text-gray-800">Entrega Padrão</p><p class="text-xs text-gray-400">R$ 19,90 · 10 dias</p></div>
+            <button class="w-9 h-5 rounded-full bg-rose-600 relative"><span class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow translate-x-4"></span></button>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4">
+            <div class="flex-1"><p class="text-sm font-medium text-gray-800">Entrega Expressa</p><p class="text-xs text-gray-400">R$ 29,90 · 7 dias</p></div>
+            <button class="w-9 h-5 rounded-full bg-rose-600 relative"><span class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow translate-x-4"></span></button>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <p class="text-sm font-medium text-gray-800 mb-3">Nova opção de frete</p>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="block text-xs text-gray-500 mb-1">Nome *</label><input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              <div><label class="block text-xs text-gray-500 mb-1">Valor (R$)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              <div><label class="block text-xs text-gray-500 mb-1">Prazo (dias)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            </div>
+            <div class="flex items-center justify-between mt-3">
+              <div class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4 text-rose-500 rounded"><span class="text-sm text-gray-600">Ativo</span></div>
+              <button class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Criar opção</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIKTOK -->
+      <div id="page-tiktok" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">TikTok Pixel</p>
+          <form id="form-tiktok" class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">TikTok Pixel ID</label>
+              <input type="text" name="pixelId" placeholder="Encontre em TikTok Ads Manager → Assets → Events → Web Events" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- WHOSAMUNGUS -->
+      <div id="page-whosamungus" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Whos.AmungUs</p>
+          <form class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">Whos.AmungUs Site ID</label>
+              <input type="text" placeholder="Encontre no snippet: _wau.push([&quot;dynamic&quot;, &quot;SEU_ID_AQUI&quot;, ...])" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- CHAVE -->
+      <div id="page-chave" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Chave StreetPay</p>
+          <form class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">Modo de autenticação</label>
+              <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                <option>Bearer Token (novo)</option>
+                <option>Basic Auth (legado)</option>
+              </select></div>
+            <div><label class="block text-sm text-gray-600 mb-1">Secret Key</label>
+              <input type="password" placeholder="••••••••" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar chaves</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- UPSELLS -->
+      <div id="page-upsells" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Upsells</p>
+          <div class="space-y-4">
+            <div class="border border-gray-200 rounded-lg p-4">
+              <p class="text-sm font-medium mb-2">Upsell 1</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-xs text-gray-500 mb-1">Título</label><input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-xs text-gray-500 mb-1">Valor (R$)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <p class="text-sm font-medium mb-2">Upsell 2</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-xs text-gray-500 mb-1">Título</label><input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-xs text-gray-500 mb-1">Valor (R$)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <p class="text-sm font-medium mb-2">Upsell 3</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-xs text-gray-500 mb-1">Título</label><input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-xs text-gray-500 mb-1">Valor (R$)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-4">
+              <p class="text-sm font-medium mb-2">Upsell 4</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-xs text-gray-500 mb-1">Título</label><input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-xs text-gray-500 mb-1">Valor (R$)</label><input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIGURACOES -->
+      <div id="page-configuracoes" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Configurações</p>
+          <form class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">Nome da loja</label>
+              <input type="text" value="Achadinhos do Momento" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div><label class="block text-sm text-gray-600 mb-1">Número de vendidos</label>
+              <input type="text" value="140327" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div><label class="block text-sm text-gray-600 mb-1">Link de rastreamento</label>
+              <input type="text" placeholder="https://..." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div><label class="block text-sm text-gray-600 mb-1">Script do head</label>
+              <textarea placeholder="Será injetado no <head> de todas as páginas da loja. Use para GTM, Meta Pixel, etc." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm h-20"></textarea></div>
+            <div class="border-t border-gray-100 pt-4">
+              <p class="text-xs font-medium text-gray-600 mb-3">Informações do rodapé</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-sm text-gray-600 mb-1">CNPJ</label>
+                  <input type="text" value="55.012.266/0001-46" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Endereço</label>
+                  <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Email</label>
+                  <input type="email" value="achadinhoscontato@gmail.com" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Telefone</label>
+                  <input type="text" value="(11) 99658-6625" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Horário de atendimento</label>
+                  <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+            <div class="border-t border-gray-100 pt-4">
+              <p class="text-xs font-medium text-gray-600 mb-3">Estatísticas da loja</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div><label class="block text-sm text-gray-600 mb-1">Avaliação (%)</label>
+                  <input type="number" value="92" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Produtos</label>
+                  <input type="number" value="38" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div><label class="block text-sm text-gray-600 mb-1">Seguidores</label>
+                  <input type="number" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              </div>
+            </div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm w-full">Salvar configurações</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PROTECAO -->
+      <div id="page-protecao" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6 max-w-lg">
+          <p class="text-sm font-semibold text-gray-800 mb-4">Proteção do Produto</p>
+          <form class="space-y-4">
+            <div><label class="block text-sm text-gray-600 mb-1">Nome</label>
+              <input type="text" value="Proteção Total com Seguro" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div><label class="block text-sm text-gray-600 mb-1">Descrição</label>
+              <input type="text" value="Seguro Anti-Roubo Disponível" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-sm text-gray-600 mb-1">Preço (R$)</label>
+                <input type="number" value="26.14" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+              <div><label class="block text-sm text-gray-600 mb-1">Preço original (R$)</label>
+                <input type="number" value="382.00" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+            </div>
+            <div><label class="block text-sm text-gray-600 mb-1">Imagem</label>
+              <div class="border border-gray-200 rounded-lg p-4 text-center">
+                <p class="text-xs text-gray-400">📷 /api/uploads/produtos/1776892140801-p8wx3bjk2d.webp</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <div><p class="text-sm font-medium text-gray-700">Ativo</p><p class="text-xs text-gray-400">Exibe a proteção no checkout</p></div>
+              <button class="w-9 h-5 rounded-full bg-rose-600 relative"><span class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow translate-x-4"></span></button>
+            </div>
+            <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm w-full">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- RELACIONADOS -->
+      <div id="page-relacionados" class="page">
+        <div class="bg-white rounded-xl border border-gray-100 p-6">
+          <p class="text-sm font-semibold text-gray-800 mb-1">Você também pode gostar</p>
+          <p class="text-xs text-gray-400 mb-4">Produtos que aparecem na seção de sugestões do carrinho</p>
+          <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-4">
+            <option>Selecione um produto...</option>
+          </select>
+          <div class="border border-dashed border-gray-200 rounded-lg p-8 text-center">
+            <p class="text-xs text-gray-300">Nenhum produto adicionado</p>
+          </div>
+          <button class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm w-full mt-4">Salvar alterações</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL PRODUTO -->
+  <div id="modal-produto" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-lg">
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <p class="font-semibold">Novo produto</p>
+        <button onclick="closeModal('modal-produto')" class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+      <form id="form-produto" class="p-6 space-y-4">
+        <div><label class="block text-sm text-gray-600 mb-1">Nome</label>
+          <input type="text" name="nome" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+        <div><label class="block text-sm text-gray-600 mb-1">Categoria</label>
+          <select name="categoria" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></select></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-sm text-gray-600 mb-1">Preço (R$)</label>
+            <input type="number" name="preco" step="0.01" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+          <div><label class="block text-sm text-gray-600 mb-1">Preço antigo (R$)</label>
+            <input type="number" name="precoAntigo" step="0.01" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div><label class="block text-sm text-gray-600 mb-1">Estoque</label>
+            <input type="number" name="estoque" value="500" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+          <div><label class="block text-sm text-gray-600 mb-1">Top</label>
+            <select name="top" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+              <option>Nenhum</option>
+              <option>TOP 1</option>
+              <option>TOP 2</option>
+            </select></div>
+          <div><label class="block text-sm text-gray-600 mb-1">Status</label>
+            <select name="status" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm">
+              <option value="ativo">Ativo</option>
+              <option value="inativo">Inativo</option>
+            </select></div>
+        </div>
+        <div class="flex gap-2 justify-end">
+          <button type="button" onclick="closeModal('modal-produto')" class="px-4 py-2 rounded-lg text-sm border border-gray-200">Cancelar</button>
+          <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CATEGORIA -->
+  <div id="modal-categoria" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-md">
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <p class="font-semibold">Nova Categoria</p>
+        <button onclick="closeModal('modal-categoria')" class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+      <form id="form-categoria" class="p-6 space-y-4">
+        <div><label class="block text-sm text-gray-600 mb-1">Nome</label>
+          <input type="text" name="nome" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"></div>
+        <div class="flex gap-2 justify-end">
+          <button type="button" onclick="closeModal('modal-categoria')" class="px-4 py-2 rounded-lg text-sm border border-gray-200">Cancelar</button>
+          <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 flex justify-around px-2 py-2">
+    <a href="#" class="nav-mobile flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs text-rose-600" data-page="dashboard">
+      <i data-lucide="layout-dashboard" class="w-5 h-5"></i><span>Dashboard</span></a>
+    <a href="#" class="nav-mobile flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs text-gray-400" data-page="produtos">
+      <i data-lucide="package" class="w-5 h-5"></i><span>Produtos</span></a>
+    <a href="#" class="nav-mobile flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs text-gray-400" data-page="pedidos">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i><span>Pedidos</span></a>
+    <a href="#" class="nav-mobile flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs text-gray-400" data-page="configuracoes">
+      <i data-lucide="settings" class="w-5 h-5"></i><span>Config</span></a>
+  </nav>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    // DATA
+    const DB = {
+      get(key) { const d = localStorage.getItem('faber_' + key); return d ? JSON.parse(d) : null; },
+      set(key, v) { localStorage.setItem('faber_' + key, JSON.stringify(v)); },
+      init() {
+        if (!this.get('categorias')) this.set('categorias', [
+          {id:1,nome:'Beleza',produtos:1},{id:2,nome:'Caixas de Som',produtos:6},{id:3,nome:'Casa & Decoração',produtos:5},{id:4,nome:'Eletrodomésticos',produtos:10},{id:5,nome:'Eletrônicos',produtos:3},{id:6,nome:'Escolar',produtos:1},{id:7,nome:'Escritório',produtos:1},{id:8,nome:'Esportes',produtos:1},{id:9,nome:'Ferramentas',produtos:1},{id:10,nome:'Fitness',produtos:2},{id:11,nome:'Geral',produtos:36},{id:12,nome:'Lazer',produtos:2},{id:13,nome:'Mobilidade',produtos:1},{id:14,nome:'Moda',produtos:2},{id:15,nome:'Moto',produtos:2}
+        ]);
+        if (!this.get('produtos')) this.set('produtos', [
+          {id:43,nome:'Colchão Sofá Cama Casal CompactAir Embalado a Vácuo Balaqui',categoria:11,preco:82.25,precoAntigo:499.90,estoque:500,top:'TOP 2',status:'inativo',vendas:0},
+          {id:42,nome:'Mesa Dobrável Tipo Maleta Prática e Durável 180x60cm — Portátil, Resistente, Fácil de Montar e Guardar',categoria:3,preco:87.74,precoAntigo:199.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:41,nome:'Conjunto de Panelas LIFE SMILE 29 Peças Granito Antiaderente',categoria:4,preco:68.96,precoAntigo:499.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:40,nome:'Camisa Brasil I 2026 Amarela - Versão Jogador',categoria:14,preco:69.90,precoAntigo:349.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:39,nome:'Ar-Condicionado Split Inverter Hisense 9.000 BTUs Frio/Quente | Silencioso, Econômico, Fácil Instalação e Ligação Via Tomada',categoria:5,preco:86.77,precoAntigo:1086.63,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:38,nome:'Armário Multiuso FlexHome em Aço com Portas de Vidro Canelado – Organizador de Cozinha Premium',categoria:3,preco:79.05,precoAntigo:249.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:37,nome:'Patinete Elétrico Com Amortecedor Adulto 350W Alta Velocidade, Bateria Longa e Suporta Até 150kg',categoria:13,preco:46.25,precoAntigo:349.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:36,nome:'Smart TV LG QNED AI 50" 4K 50QN80TSA',categoria:5,preco:4.90,precoAntigo:1429.43,estoque:500,top:'Nenhum',status:'inativo',vendas:4},
+          {id:35,nome:'Kit Jogo de Lençol 04 Peças 600 Fios Egípcios Cama Casal Queen King Micropercal Macio',categoria:10,preco:74.03,precoAntigo:299.90,estoque:500,top:'Nenhum',status:'ativo',vendas:0},
+          {id:34,nome:'Caixa de Som Bluetooth JBL Flip 7 – À Prova d\'Água IP67, Som 360° e Bateria de Longa Duração',categoria:2,preco:43.89,precoAntigo:465.95,estoque:500,top:'Nenhum',status:'ativo',vendas:0}
+        ]);
+        if (!this.get('pedidos')) this.set('pedidos', [
+          {id:139,cliente:'Juliana Queiroz da Silva',frete:0,desconto:0,total:145.80,pagamento:'Aguardando Pix',data:'23/04/2026, 17:20'},
+          {id:138,cliente:'Paulo Vendramini',frete:0,desconto:0,total:125.90,pagamento:'Pago',data:'23/04/2026, 16:26'},
+          {id:137,cliente:'Josué Marques Rezende',frete:0,desconto:0,total:99.76,pagamento:'Aguardando Pix',data:'23/04/2026, 16:25'},
+          {id:136,cliente:'Fernando Novaes',frete:0,desconto:0,total:99.76,pagamento:'Aguardando Pix',data:'23/04/2026, 15:46'},
+          {id:135,cliente:'Wemerson ferreira',frete:0,desconto:0,total:99.76,pagamento:'Aguardando Pix',data:'23/04/2026, 15:37'},
+          {id:134,cliente:'Eduardo José dos santoa',frete:0,desconto:0,total:99.76,pagamento:'Pago',data:'23/04/2026, 15:31'},
+          {id:133,cliente:'Mateus kramer',frete:0,desconto:0,total:99.76,pagamento:'Pago',data:'23/04/2026, 15:04'},
+          {id:132,cliente:'Thalisson ruis morais',frete:0,desconto:0,total:99.76,pagamento:'Aguardando Pix',data:'23/04/2026, 01:24'},
+          {id:131,cliente:'Renan Durães Viana',frete:0,desconto:0,total:125.90,pagamento:'Aguardando Pix',data:'23/04/2026, 01:16'},
+          {id:130,cliente:'Luiz Antônio Affonso',frete:0,desconto:0,total:99.76,pagamento:'Pago',data:'23/04/2026, 00:45'}
+        ]);
+        if (!this.get('clientes')) this.set('clientes', [
+          {id:1,nome:'Emanuel Aparecido conca sanches',email:'emanuel@email.com',telefone:'52765636915',pedidos:14,ultimo:'17/04/2026'},
+          {id:2,nome:'James cleimar abella',email:'james@email.com',telefone:'69659486049',pedidos:4,ultimo:'17/04/2026'},
+          {id:3,nome:'Maria Aparecida Delfino',email:'maria@email.com',telefone:'77491700900',pedidos:1,ultimo:'17/04/2026'},
+          {id:4,nome:'Fabrício Sündermann',email:'fabricio@email.com',telefone:'81917252070',pedidos:4,ultimo:'17/04/2026'},
+          {id:5,nome:'Vitor Leandro Silva',email:'vitor@email.com',telefone:'12806122740',pedidos:1,ultimo:'17/04/2026'},
+          {id:6,nome:'Oleir Cabral',email:'oleir@email.com',telefone:'31483662802',pedidos:1,ultimo:'17/04/2026'},
+          {id:7,nome:'Elio fraron',email:'elio@email.com',telefone:'32636326049',pedidos:2,ultimo:'17/04/2026'},
+          {id:8,nome:'Decio Ferreira Dos Santos',email:'decio@email.com',telefone:'32542161801',pedidos:2,ultimo:'16/04/2026'},
+          {id:9,nome:'Thiago Gonçalves',email:'thiago@email.com',telefone:'40273085816',pedidos:1,ultimo:'16/04/2026'},
+          {id:10,nome:'Carlos Magno Perazoli do Nascimento',email:'carlos@email.com',telefone:'05396116625',pedidos:1,ultimo:'16/04/2026'}
+        ]);
+      }
+    };
+
+    lucide.createIcons();
+
+    const pageTitles = {
+      dashboard:'Dashboard',categorias:'Categorias',produtos:'Produtos',protecao:'Proteção Prod.',
+      relacionados:'Relacionados',clientes:'Clientes',pedidos:'Pedidos',perfil:'Perfil',frete:'Frete',
+      tiktok:'TikTok',whosamungus:'Whos.AmungUs',chave:'Chave StreetPay',upsells:'Upsells',configuracoes:'Configurações'
+    };
+
+    function showPage(pg) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-'+pg).classList.add('active');
+      document.querySelector('.page-title').textContent = pageTitles[pg];
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+      document.querySelector('.nav-link[data-page="'+pg+'"]').classList.add('active');
+      document.querySelectorAll('.nav-mobile').forEach(n => {
+        n.classList.remove('text-rose-600');n.classList.add('text-gray-400');
+        if(n.dataset.page===pg){n.classList.remove('text-gray-400');n.classList.add('text-rose-600');}
+      });
+      if(pg==='produtos')renderProdutos();
+      if(pg==='categorias')renderCategorias();
+      if(pg==='pedidos')renderPedidos();
+      if(pg==='clientes')renderClientes();
+    }
+
+    // CLICK HANDLERS
+    document.querySelectorAll('.nav-link, .nav-mobile').forEach(link => {
+      link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); });
+    });
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); lucide.createIcons(); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function renderProdutos() {
+      const lista = DB.get('produtos');
+      const cats = DB.get('categorias');
+      const busca = document.getElementById('busca-produtos').value.toLowerCase();
+      let html = '';
+      lista.filter(p => !busca || p.nome.toLowerCase().includes(busca)).forEach(p => {
+        const cat = cats.find(c=>c.id===p.categoria);
+        const precoAntigo = p.precoAntigo || (p.preco * 2).toFixed(2);
+        html += '<tr class="border-b border-gray-50"><td class="px-6 py-3 text-sm text-gray-600">'+p.id+'</td>'+
+          '<td class="px-6 py-3 text-sm font-medium max-w-xs truncate">'+p.nome+'</td>'+
+          '<td class="px-6 py-3 text-sm">R$ '+p.preco.toFixed(2).replace('.',',')+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-400 line-through">R$ '+precoAntigo.replace('.',',')+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600">'+p.estoque+'</td>'+
+          '<td class="px-6 py-3"><span class="px-2 py-1 rounded-full text-xs '+(p.top?'bg-rose-100 text-rose-700':'bg-gray-100')+'">'+(p.top||'Nenhum')+'</span></td>'+
+          '<td class="px-6 py-3"><span class="px-2 py-1 rounded-full text-xs '+(p.status==='ativo'?'bg-green-100 text-green-700':'bg-gray-100')+'">'+(p.status==='ativo'?'Ativo':'Inativo')+'</span></td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600">'+p.vendas+'</td>'+
+          '<td class="px-6 py-3"><button onclick="excluirProduto('+p.id+')" class="text-gray-400 hover:text-red-500 text-xs">Excluir</button></td></tr>';
+      });
+      document.getElementById('tabela-produtos').innerHTML = html;
+      document.getElementById('count-produtos').textContent = lista.length;
+    }
+
+    function renderCategorias() {
+      const lista = DB.get('categorias');
+      let html = '';
+      lista.forEach(c => {
+        html += '<tr class="border-b border-gray-50"><td class="px-6 py-3 text-sm text-gray-600">'+c.id+'</td>'+
+          '<td class="px-6 py-3 text-sm font-medium">'+c.nome+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600">'+c.produtos+' produtos</td></tr>';
+      });
+      document.getElementById('tabela-categorias').innerHTML = html;
+      document.getElementById('count-categorias').textContent = lista.length;
+    }
+
+    function renderPedidos() {
+      const lista = DB.get('pedidos');
+      const st = document.getElementById('filtro-status').value;
+      let html = '';
+      lista.filter(p => !st || p.pagamento===st).forEach(p => {
+        const cls = {pendente:'bg-yellow-100 text-yellow-700','Aguardando Pix':'bg-yellow-100 text-yellow-700',pago:'bg-green-100 text-green-700',enviado:'bg-blue-100 text-blue-700',entregue:'bg-purple-100 text-purple-700',cancelado:'bg-red-100 text-red-700'}[p.pagamento];
+        html += '<tr class="border-b border-gray-50"><td class="px-6 py-3 text-sm text-gray-600">#'+p.id+'<br><span class="text-gray-400">'+p.cliente+'</span></td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600"><span class="text-xs">Ver itens</span></td>'+
+          '<td class="px-6 py-3 text-sm">R$ '+p.frete.toFixed(2).replace('.',',')+'</td>'+
+          '<td class="px-6 py-3 text-sm">R$ '+p.desconto.toFixed(2).replace('.',',')+'</td>'+
+          '<td class="px-6 py-3 text-sm font-medium">R$ '+p.total.toFixed(2).replace('.',',')+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-400">'+p.data+'</td>'+
+          '<td class="px-6 py-3"><span class="px-2 py-1 rounded-full text-xs '+cls+'">'+p.pagamento+'</span></td>'+
+          '<td class="px-6 py-3"><button class="text-gray-400 hover:text-rose-500 text-xs">Ver itens</button></td></tr>';
+      });
+      document.getElementById('tabela-pedidos').innerHTML = html;
+      document.getElementById('count-pedidos').textContent = lista.length;
+    }
+
+    function renderClientes() {
+      const lista = DB.get('clientes');
+      let html = '';
+      lista.forEach(c => {
+        const inicial = c.nome.charAt(0).toUpperCase();
+        html += '<tr class="border-b border-gray-50"><td class="px-6 py-3"><span class="w-6 h-6 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-medium">'+inicial+'</span></td>'+
+          '<td class="px-6 py-3 text-sm font-medium">'+c.nome+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-500">'+c.email+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600">'+c.telefone+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-600">'+c.pedidos+' pedido'+(c.pedidos>1?'s':'')+'</td>'+
+          '<td class="px-6 py-3 text-sm text-gray-400">'+c.ultimo||'17/04/2026'+'</td></tr>';
+      });
+      document.getElementById('tabela-clientes').innerHTML = html;
+      document.getElementById('count-clientes').textContent = lista.length;
+    }
+
+    function excluirProduto(id) {
+      if(confirm('Excluir produto?')) {
+        let l = DB.get('produtos').filter(p=>p.id!==id);
+        DB.set('produtos',l); renderProdutos();
+      }
+    }
+
+    function excluirCategoria(id) {
+      if(confirm('Excluir categoria?')) {
+        let l = DB.get('categorias').filter(c=>c.id!==id);
+        DB.set('categorias',l); renderCategorias();
+      }
+    }
+
+    document.getElementById('form-produto').addEventListener('submit',function(e){
+      e.preventDefault();
+      const f = e.target, l = DB.get('produtos');
+      l.push({id:Date.now(),nome:f.nome.value,categoria:parseInt(f.categoria.value),preco:parseFloat(f.preco.value),precoAntigo:parseFloat(f.preco.value)*2,estoque:500,top:'Nenhum',status:f.status.value,vendas:0});
+      DB.set('produtos',l); closeModal('modal-produto'); renderProdutos(); f.reset();
+    });
+
+    document.getElementById('form-categoria').addEventListener('submit',function(e){
+      e.preventDefault();
+      const f = e.target, l = DB.get('categorias');
+      l.push({id:Date.now(),nome:f.nome.value,produtos:0});
+      DB.set('categorias',l); closeModal('modal-categoria'); renderCategorias(); f.reset();
+    });
+
+    document.getElementById('form-tiktok').addEventListener('submit',function(e){e.preventDefault();alert('Salvo!');});
+
+    document.getElementById('form-perfil').addEventListener('submit',function(e){e.preventDefault();alert('Salvo!');});
+
+    // INIT
+    DB.init();
+    showPage('dashboard');
+  </script>
+</body>
+</html>
